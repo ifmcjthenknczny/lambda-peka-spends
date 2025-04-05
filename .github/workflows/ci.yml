@@ -1,0 +1,65 @@
+name: ci
+
+on: [push]
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22.11.0"
+
+jobs:
+  ci-lambda:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ./lambda-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'yarn'
+          cache-dependency-path: 'lambda-app/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Lint code
+        run: yarn lint
+
+      - name: Build code
+        run: yarn build
+
+      - name: Test code
+        run: yarn test
+
+  ci-deployer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ./deployer
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'yarn'
+          cache-dependency-path: 'deployer/yarn.lock'
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Lint code
+        run: yarn lint
+
+      - name: Build code
+        run: yarn build
