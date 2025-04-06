@@ -115,7 +115,6 @@ class Site extends Stack {
                 day: '3',
                 month: '*',
                 year: '*',
-                weekDay: '?'
             }).expressionString,
             target: {
                 arn: lambdaApp.functionArn,
