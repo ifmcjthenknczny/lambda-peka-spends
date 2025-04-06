@@ -4,18 +4,21 @@ import {
     Size,
     Stack,
     StackProps,
+    aws_events as events,
+    aws_iam as iam,
     aws_lambda as lambda,
     aws_logs as logs,
+    aws_scheduler as scheduler,
 } from 'aws-cdk-lib'
 
 import { Construct } from 'constructs'
 import { env } from './env'
 
 const ARCHITECTURE = lambda.Architecture.ARM_64
-const LAMBDA_APP_RESOURCE_NAME = 'LambdaApp'
-const NODE_MODULES_RESOURCE_NAME = 'NodeModules'
-// const RESOURCE_ID = '*'
+const LAMBDA_APP_RESOURCE_NAME = 'LambdaApp-Peka'
+const NODE_MODULES_RESOURCE_NAME = 'NodeModules-Peka'
 const RUNTIME = lambda.Runtime.NODEJS_22_X
+const RESOURCE_ID = '*'
 
 class Site extends Stack {
     constructor(scope: Construct, name: string, stackProps: StackProps) {
@@ -47,12 +50,57 @@ class Site extends Stack {
             environment: {
                 DATABASE_NAME: env.DATABASE_NAME,
                 MONGO_URI: env.MONGO_URI,
+                EMAIL: env.EMAIL,
+                PASSWORD: env.PASSWORD,
             },
         })
 
         new logs.LogGroup(this, 'LogGroup', {
             logGroupName: `/aws/lambda/${lambdaApp.functionName}`,
             retention: logs.RetentionDays.TWO_WEEKS,
+        })
+
+        // SCHEDULERS
+        const schedulerRole = new iam.Role(this, 'SchedulerRole', {
+            assumedBy: new iam.ServicePrincipal(`scheduler.${this.urlSuffix}`),
+        })
+
+        schedulerRole.assumeRolePolicy?.addStatements(
+            new iam.PolicyStatement({
+                actions: ['sts:AssumeRole'],
+                conditions: {
+                    ArnLike: {
+                        'aws:SourceArn': `arn:${this.partition}:scheduler:${this.region}:${this.account}:schedule/*/${this.stackName}-${RESOURCE_ID}-*`,
+                    },
+                },
+                effect: iam.Effect.ALLOW,
+                principals: [
+                    new iam.ServicePrincipal(`scheduler.${this.urlSuffix}`),
+                ],
+            }),
+        )
+
+        schedulerRole.addToPolicy(
+            new iam.PolicyStatement({
+                actions: ['lambda:InvokeFunction'],
+                effect: iam.Effect.ALLOW,
+                resources: [lambdaApp.functionArn],
+                sid: 'StartExecutionPolicy',
+            }),
+        )
+
+        new scheduler.CfnSchedule(this, 'INSERT_PEKA_JOURNEYS_EVERYDAY', {
+            flexibleTimeWindow: {
+                mode: 'OFF',
+            },
+            scheduleExpressionTimezone: 'Europe/Warsaw',
+            scheduleExpression: events.Schedule.cron({ minute: '0', hour: '4' })
+                .expressionString,
+            target: {
+                arn: lambdaApp.functionArn,
+                input: JSON.stringify({ action: 'PEKA_EVERYDAY' }),
+                roleArn: schedulerRole.roleArn,
+            },
         })
     }
 }

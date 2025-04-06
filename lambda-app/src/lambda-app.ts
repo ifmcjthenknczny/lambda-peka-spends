@@ -1,12 +1,16 @@
+import dayjs from 'dayjs'
 import { finalizeScriptContext, initializeScriptContext } from './context'
 import { log, logError } from './helpers/util/log'
+import { requestTransits } from './requestTransits'
+import { toDay } from './helpers/util/date'
 
 // import { migration } from './helpers/migration'
 
 export enum ActionType {
     PING = 'PING',
-    MIGRATION = 'MIGRATION',
     TEST = 'TEST',
+    PEKA_EVERYDAY = 'PEKA_EVERYDAY',
+    MIGRATION = 'MIGRATION',
 }
 
 interface AppConfig {
@@ -19,17 +23,22 @@ interface AppConfig {
 export async function lambda(config: AppConfig) {
     log(`Starting execution: config=${JSON.stringify(config)}.`)
     const context = await initializeScriptContext(config.executionId)
-    // const migrationFunction = 
 
     switch (config.action) {
         case ActionType.PING:
             log('PONG')
             break
-        // case ActionType.MIGRATION:
-        //     await migration(context, migrationFunction)
-        //     break
-        case ActionType.TEST:
-            log('TEST')
+        case ActionType.PEKA_EVERYDAY:
+            const day = toDay(dayjs().subtract(2, 'days'))
+            await requestTransits(context, { START_DAY: day, END_DAY: day })
+            break
+        case ActionType.MIGRATION:
+            const startDay = '2025-01-01'
+            const endDay = '2025-04-05'
+            await requestTransits(context, {
+                START_DAY: startDay,
+                END_DAY: endDay,
+            })
             break
         default:
             logError(`Unknown action: action=${config.action}.`)

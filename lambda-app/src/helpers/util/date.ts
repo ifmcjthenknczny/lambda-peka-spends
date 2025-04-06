@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from 'dayjs'
 export type Day = `${number}-${number}-${number}`
 export type Hour = `${number}:${number}`
 
-type DateLike = Date | Day | Dayjs
+type DateLike = Date | Day | Dayjs | string
 
 export function toTimestampSeconds(date: Date): number {
     return Math.floor(date.getTime() / 1000)
@@ -20,4 +20,3 @@ export function yesterday(relativeDay: dayjs.Dayjs = dayjs()) {
 export function toHour(date: DateLike): Hour {
     return dayjs(date).format('HH:mm') as Hour
 }
-

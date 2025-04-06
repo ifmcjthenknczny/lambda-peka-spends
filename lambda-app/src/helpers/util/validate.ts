@@ -1,4 +1,9 @@
-import { ZodSchema, z } from 'zod'
+import { ZodSchema } from 'zod'
+import { emailSchema } from '../../schema'
+
+type ValidationError = {
+    message: string
+}
 
 function safeValidateString<T>(
     data: string,
@@ -10,8 +15,6 @@ function safeValidateString<T>(
     }
     return { validatedValue: validatedData.data }
 }
-
-const emailSchema = z.string().email()
 
 export function validateEmail(email?: string) {
     if (!email) {
@@ -25,4 +28,24 @@ export function validateEmail(email?: string) {
         return undefined
     }
     return email.trim()
+}
+
+export function validate<T>(
+    data: Partial<T>,
+    schema: any,
+): T & { errors?: string[] } {
+    const cleanedData = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        Object.entries(data).filter(([_, v]) => v !== undefined),
+    )
+    // eslint-disable-next-line
+    const validated = schema.safeParse(cleanedData)
+    return {
+        ...('error' in validated && {
+            errors: (validated.error.errors as ValidationError[]).map(
+                ({ message }) => message,
+            ),
+        }),
+        ...('data' in validated && validated.data),
+    }
 }

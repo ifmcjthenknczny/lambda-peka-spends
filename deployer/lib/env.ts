@@ -14,6 +14,8 @@ export const env = createEnv({
         AWS_STACK_NAME: z.string().min(1),
         DATABASE_NAME: z.string().min(1),
         MONGO_URI: z.string().min(1),
+        EMAIL: z.string().email(),
+        PASSWORD: z.string().min(1),
     },
 
     runtimeEnv: {
@@ -22,5 +24,7 @@ export const env = createEnv({
         AWS_STACK_NAME: process.env.AWS_STACK_NAME,
         DATABASE_NAME: process.env.DATABASE_NAME,
         MONGO_URI: process.env.MONGO_URI,
+        EMAIL: process.env.EMAIL,
+        PASSWORD: process.env.PASSWORD,
     },
 })

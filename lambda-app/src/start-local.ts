@@ -1,7 +1,7 @@
 import { ActionType, lambda } from './lambda-app'
 
 const config = {
-    action: ActionType.TEST,
+    action: ActionType.MIGRATION,
     rawEvent: null,
     executionId: 'local',
     runningLocal: true,
