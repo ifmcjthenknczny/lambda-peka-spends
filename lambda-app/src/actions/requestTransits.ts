@@ -1,19 +1,19 @@
-import { ScriptContext } from './context'
+import { ScriptContext } from '../context'
 import * as dotenv from 'dotenv'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { authenticate } from './helpers/login'
+import { authenticate } from '../helpers/login'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
-import { paramsSchema } from './schema'
-import { log, logError, logWarn } from './helpers/util/log'
-import { Day, toDay } from './helpers/util/date'
-import { validate } from './helpers/util/validate'
-import { PekaResponse, REQUEST_HEADERS } from './request'
+import { paramsSchema } from '../schema'
+import { log, logError, logWarn } from '../helpers/util/log'
+import { Day, toDay } from '../helpers/util/date'
+import { validate } from '../helpers/util/validate'
+import { PekaResponse, REQUEST_HEADERS } from '../request'
 import {
     DbPekaJourney,
     insertPekaJourneys,
     toDbPekaJourney,
-} from './client/pekaJourneys'
+} from '../client/pekaJourneys'
 
 dayjs.extend(isSameOrAfter)
 dotenv.config()
@@ -35,7 +35,7 @@ async function makeRequest(pageNumber: number, bearerToken: string) {
     return response.data.data
 }
 
-type Params = {
+export type Params = {
     START_DAY: Day
     END_DAY: Day
 }

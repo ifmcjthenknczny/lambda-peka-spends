@@ -35,3 +35,37 @@ export const insertPekaJourneys = async (
         throw new Error(`Failed to insert PEKA Journeys. ${error.message}`)
     }
 }
+
+export const sumPrices = async (
+    db: mongoose.mongo.Db,
+    start: Day,
+    end: Day,
+) => {
+    const collection = pekaCollection(db)
+    const result = await collection
+        .aggregate<{ totalSpent: number }>([
+            {
+                $match: {
+                    transactionDate: {
+                        $gte: start,
+                        $lte: end,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalPrice: { $sum: '$price' },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalSpent: { $round: ['$totalPrice', 2] },
+                },
+            },
+        ])
+        .toArray()
+
+    return result?.[0]?.totalSpent || 0
+}

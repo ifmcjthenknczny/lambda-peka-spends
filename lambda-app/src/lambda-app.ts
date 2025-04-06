@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
 import { finalizeScriptContext, initializeScriptContext } from './context'
 import { log, logError } from './helpers/util/log'
-import { requestTransits } from './requestTransits'
+import { requestTransits } from './actions/requestTransits'
 import { toDay } from './helpers/util/date'
+import { sendSummary } from './actions/sendSummary'
 
 // import { migration } from './helpers/migration'
 
@@ -10,6 +11,7 @@ export enum ActionType {
     PING = 'PING',
     TEST = 'TEST',
     PEKA_EVERYDAY = 'PEKA_EVERYDAY',
+    SUMMARY_MONTHLY = 'SUMMARY_MONTHLY',
     MIGRATION = 'MIGRATION',
 }
 
@@ -40,6 +42,9 @@ export async function lambda(config: AppConfig) {
                 END_DAY: endDay,
             })
             break
+        case ActionType.SUMMARY_MONTHLY:
+            await sendSummary(context)
+            break;
         default:
             logError(`Unknown action: action=${config.action}.`)
     }

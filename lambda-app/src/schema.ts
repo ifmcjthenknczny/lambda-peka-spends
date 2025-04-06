@@ -33,4 +33,5 @@ export const envSchema = z.object({
     PASSWORD: z.string().min(1, 'PASSWORD is required'),
     MONGO_URI: z.string().min(1, 'Mongo URI is required'),
     DATABASE_NAME: z.string().min(1, 'Database name is required'),
+    EMAIL_SENDER: emailSchema,
 })

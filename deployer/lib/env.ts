@@ -16,6 +16,7 @@ export const env = createEnv({
         MONGO_URI: z.string().min(1),
         EMAIL: z.string().email(),
         PASSWORD: z.string().min(1),
+        EMAIL_SENDER: z.string().email()
     },
 
     runtimeEnv: {
@@ -26,5 +27,6 @@ export const env = createEnv({
         MONGO_URI: process.env.MONGO_URI,
         EMAIL: process.env.EMAIL,
         PASSWORD: process.env.PASSWORD,
+        EMAIL_SENDER: process.env.EMAIL_SENDER
     },
 })

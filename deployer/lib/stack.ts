@@ -52,6 +52,7 @@ class Site extends Stack {
                 MONGO_URI: env.MONGO_URI,
                 EMAIL: env.EMAIL,
                 PASSWORD: env.PASSWORD,
+                EMAIL_SENDER: env.EMAIL_SENDER
             },
         })
 
@@ -99,6 +100,26 @@ class Site extends Stack {
             target: {
                 arn: lambdaApp.functionArn,
                 input: JSON.stringify({ action: 'PEKA_EVERYDAY' }),
+                roleArn: schedulerRole.roleArn,
+            },
+        })
+
+        new scheduler.CfnSchedule(this, 'SEND_MONTHLY_SUMMARY', {
+            flexibleTimeWindow: {
+                mode: 'OFF',
+            },
+            scheduleExpressionTimezone: 'Europe/Warsaw',
+            scheduleExpression: events.Schedule.cron({
+                minute: '0',
+                hour: '7',
+                day: '3',
+                month: '*',
+                year: '*',
+                weekDay: '?'
+            }).expressionString,
+            target: {
+                arn: lambdaApp.functionArn,
+                input: JSON.stringify({ action: 'SUMMARY_MONTHLY' }),
                 roleArn: schedulerRole.roleArn,
             },
         })
