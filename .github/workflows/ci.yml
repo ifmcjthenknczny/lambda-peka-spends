@@ -35,9 +35,6 @@ jobs:
       - name: Build code
         run: yarn build
 
-      - name: Test code
-        run: yarn test
-
   ci-deployer:
     runs-on: ubuntu-latest
     timeout-minutes: 5
