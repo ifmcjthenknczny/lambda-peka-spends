@@ -1,7 +1,7 @@
 import { ActionType, lambda } from './lambda-app'
 
 const config = {
-    action: ActionType.MIGRATION,
+    action: ActionType.SUMMARY_MONTHLY_MIGRATION,
     rawEvent: null,
     executionId: 'local',
     runningLocal: true,

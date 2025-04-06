@@ -3,7 +3,8 @@ import { finalizeScriptContext, initializeScriptContext } from './context'
 import { log, logError } from './helpers/util/log'
 import { requestTransits } from './actions/requestTransits'
 import { toDay } from './helpers/util/date'
-import { sendSummary } from './actions/sendSummary'
+import { buildSummary } from './actions/buildSummary'
+import { sumPrices } from './client/pekaJourneys'
 
 // import { migration } from './helpers/migration'
 
@@ -12,6 +13,8 @@ export enum ActionType {
     TEST = 'TEST',
     PEKA_EVERYDAY = 'PEKA_EVERYDAY',
     SUMMARY_MONTHLY = 'SUMMARY_MONTHLY',
+    SUM_PRICES = 'SUM_PRICES',
+    SUMMARY_MONTHLY_MIGRATION = 'SUMMARY_MONTHLY_MIGRATION',
     MIGRATION = 'MIGRATION',
 }
 
@@ -42,9 +45,19 @@ export async function lambda(config: AppConfig) {
                 END_DAY: endDay,
             })
             break
+        case ActionType.SUM_PRICES:
+            const from = toDay(dayjs().subtract(1, 'month').startOf('month'))
+            const to = toDay(dayjs().subtract(1, 'month').endOf('month'))
+            const sum = await sumPrices(context.db, from, to)
+            log(`${sum} zł`)
+            break
         case ActionType.SUMMARY_MONTHLY:
-            await sendSummary(context)
-            break;
+            await buildSummary(context)
+            break
+        case ActionType.SUMMARY_MONTHLY_MIGRATION:
+            const monthsAgo = 2
+            await buildSummary(context, monthsAgo)
+            break
         default:
             logError(`Unknown action: action=${config.action}.`)
     }

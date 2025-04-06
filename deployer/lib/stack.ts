@@ -52,7 +52,6 @@ class Site extends Stack {
                 MONGO_URI: env.MONGO_URI,
                 EMAIL: env.EMAIL,
                 PASSWORD: env.PASSWORD,
-                EMAIL_SENDER: env.EMAIL_SENDER
             },
         })
 
@@ -104,7 +103,7 @@ class Site extends Stack {
             },
         })
 
-        new scheduler.CfnSchedule(this, 'SEND_MONTHLY_SUMMARY', {
+        new scheduler.CfnSchedule(this, 'MONTHLY_SUMMARY', {
             flexibleTimeWindow: {
                 mode: 'OFF',
             },

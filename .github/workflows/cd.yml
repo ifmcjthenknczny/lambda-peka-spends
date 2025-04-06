@@ -18,7 +18,6 @@ env:
   MONGO_URI: ${{ secrets.MONGO_URI }}
   EMAIL: ${{ secrets.EMAIL }}
   PASSWORD: ${{ secrets.PASSWORD }}
-  EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
 
 jobs:
   build-LambdaApp:
@@ -51,7 +50,7 @@ jobs:
         run: rm ${{ env.LAMBDA_NAME }}/start-local.js
 
       - name: Setup envs
-        run: echo -e "AWS_STACK_NAME=$AWS_STACK_NAME\nMONGO_URI=${{ env.MONGO_URI }}\nDATABASE_NAME=${{ env.DATABASE_NAME }}\nEMAIL=${{ env.EMAIL }}\nPASSWORD=${{ env.PASSWORD }}\nEMAIL_SENDER=${{ env.EMAIL_SENDER }}" > ${{ env.LAMBDA_NAME }}/.env
+        run: echo -e "AWS_STACK_NAME=$AWS_STACK_NAME\nMONGO_URI=${{ env.MONGO_URI }}\nDATABASE_NAME=${{ env.DATABASE_NAME }}\nEMAIL=${{ env.EMAIL }}\nPASSWORD=${{ env.PASSWORD }}" > ${{ env.LAMBDA_NAME }}/.env
 
       - name: Setup starter
         run: mv lambda-app/deployment/lambda-starter.js ${{ env.LAMBDA_NAME }}/lambda-starter.js

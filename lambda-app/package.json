@@ -22,7 +22,6 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "mongoose": "^8.7.0",
-    "resend": "^4.2.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

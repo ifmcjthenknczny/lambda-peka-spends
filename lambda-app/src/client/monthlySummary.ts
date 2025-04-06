@@ -1,38 +1,32 @@
 import mongoose from 'mongoose'
-import { TransitContent } from '../request'
-import { Day, toDay } from '../helpers/util/date'
+import { Day } from '../helpers/util/date'
+import { journeyCollection } from './pekaJourneys'
 
-const collectionName = 'PekaJourneys'
+const collectionName = 'MonthlySummaries'
 
-export type DbPekaJourney = {
+type DbMonthlySummary = {
     _id: string
-    transactionDate: Day
-    price: number
+    from: Day
+    to: Day
+    sum: number
     createdAt: Date
 }
 
-export const toDbPekaJourney = (journey: TransitContent): DbPekaJourney => {
-    return {
-        _id: journey.transactionId,
-        transactionDate: toDay(journey.transactionDate),
-        price: journey.price,
-        createdAt: new Date(),
-    }
+const summaryCollection = (db: mongoose.mongo.Db) => {
+    return db.collection<DbMonthlySummary>(collectionName)
 }
 
-export const journeyCollection = (db: mongoose.mongo.Db) => {
-    return db.collection<DbPekaJourney>(collectionName)
-}
-
-export const insertPekaJourneys = async (
+export const insertMonthlySummary = async (
     db: mongoose.mongo.Db,
-    journeys: DbPekaJourney[],
+    summary: Omit<DbMonthlySummary, 'createdAt'>,
 ) => {
     try {
-        const collection = journeyCollection(db)
-        await collection.insertMany(journeys)
+        const collection = summaryCollection(db)
+        await collection.insertOne({ ...summary, createdAt: new Date() })
     } catch (error: any) {
-        throw new Error(`Failed to insert PEKA Journeys. ${error.message}`)
+        throw new Error(
+            `Failed to insert PEKA Monthly Summary. ${error.message}`,
+        )
     }
 }
 
