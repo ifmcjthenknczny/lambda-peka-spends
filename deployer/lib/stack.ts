@@ -16,7 +16,7 @@ import { env } from './env'
 
 const ARCHITECTURE = lambda.Architecture.ARM_64
 const LAMBDA_APP_RESOURCE_NAME = 'LambdaApp-Peka'
-const NODE_MODULES_RESOURCE_NAME = 'NodeModules-Peka'
+const NODE_MODULES_RESOURCE_NAME = 'NodeModules'
 const RUNTIME = lambda.Runtime.NODEJS_22_X
 const RESOURCE_ID = '*'
 
