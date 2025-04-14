@@ -14,8 +14,8 @@ env:
   LAMBDA_NAME: "LambdaApp-Peka"
   BUILD_ID: ${{ github.run_number }}
   AWS_STACK_NAME: ${{ vars.AWS_STACK_NAME }}
-  DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
   MONGO_URI: ${{ secrets.MONGO_URI }}
+  DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
   EMAIL: ${{ secrets.EMAIL }}
   PASSWORD: ${{ secrets.PASSWORD }}
 
@@ -49,8 +49,14 @@ jobs:
       - name: Clean build
         run: rm ${{ env.LAMBDA_NAME }}/start-local.js
 
-      - name: Setup envs
-        run: echo -e "AWS_STACK_NAME=$AWS_STACK_NAME\nMONGO_URI=${{ env.MONGO_URI }}\nDATABASE_NAME=${{ env.DATABASE_NAME }}\nEMAIL=${{ env.EMAIL }}\nPASSWORD=${{ env.PASSWORD }}" > ${{ env.LAMBDA_NAME }}/.env
+      - name: Setup envs in .env file
+        run: |
+          env_vars=("AWS_STACK_NAME" "MONGO_URI" "DATABASE_NAME" "EMAIL" "PASSWORD")
+
+          for var in "${env_vars[@]}"; do
+            echo "::add-mask::${!var}"
+            echo "$var=${!var}" >> "$LAMBDA_NAME/.env"
+          done
 
       - name: Setup starter
         run: mv lambda-app/deployment/lambda-starter.js ${{ env.LAMBDA_NAME }}/lambda-starter.js
