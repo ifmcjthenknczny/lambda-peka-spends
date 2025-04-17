@@ -6,6 +6,20 @@ A Node.js script that scrapes Poznan public transport journeys paid by PEKA card
 The project is AWS Lambda ready, it utilizes schedulers to save journeys from two days ago everyday and to summarize monthly costs of public transport on 3rd day of every month.
 A key feature of its configuration is that it is free — it does not use AWS Secrets Manager, as it injects environment variables from GitHub Actions Secrets at deployment.
 
+## Table of contents
+  * [Features](#features)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Local usage](#local-usage)
+  * [Serverless usage](#serverless-usage)
+  * [Database](#database)
+    + [Collections](#collections)
+  * [Lambda Actions](#lambda-actions)
+  * [Roadmap](#roadmap)
+  * [License](#license)
+  * [Disclaimer](#disclaimer)
+  * [Contact](#contact)
+
 ## Features
 
 * Fetches transaction data from PEKA API.
