@@ -11,7 +11,10 @@ dayjs.locale('pl')
 const buildMonthString = (monthsAgo: number) =>
     dayjs().subtract(monthsAgo, 'month').format('MMMM YYYY')
 
-export const buildSummary = async (context: ScriptContext, monthsAgo = 1) => {
+export const generateMonthlySummary = async (
+    context: ScriptContext,
+    monthsAgo = 1,
+) => {
     const from = toDay(dayjs().subtract(monthsAgo, 'month').startOf('month'))
     const to = toDay(dayjs().subtract(monthsAgo, 'month').endOf('month'))
     const sum = await sumPrices(context.db, from, to)

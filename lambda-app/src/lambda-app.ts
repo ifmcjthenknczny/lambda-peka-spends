@@ -3,18 +3,17 @@ import { finalizeScriptContext, initializeScriptContext } from './context'
 import { log, logError } from './helpers/util/log'
 import { requestTransits } from './actions/requestTransits'
 import { toDay } from './helpers/util/date'
-import { buildSummary } from './actions/buildSummary'
 import { sumPrices } from './client/pekaJourneys'
-
-// import { migration } from './helpers/migration'
+import { generateMonthlySummary } from './actions/generateMonthlySummary'
 
 export enum ActionType {
     PING = 'PING',
     TEST = 'TEST',
     PEKA_EVERYDAY = 'PEKA_EVERYDAY',
     SUMMARY_MONTHLY = 'SUMMARY_MONTHLY',
-    SUM_PRICES = 'SUM_PRICES',
+    SUM_CURRENT_MONTH_PRICES = 'SUM_CURRENT_MONTH_PRICES',
     SUMMARY_MONTHLY_MIGRATION = 'SUMMARY_MONTHLY_MIGRATION',
+    MIGRATE_EXISTING_PEKA_DATA = 'MIGRATE_EXISTING_PEKA_DATA',
     MIGRATION = 'MIGRATION',
 }
 
@@ -45,18 +44,38 @@ export async function lambda(config: AppConfig) {
                 END_DAY: endDay,
             })
             break
-        case ActionType.SUM_PRICES:
-            const from = toDay(dayjs().subtract(1, 'month').startOf('month'))
-            const to = toDay(dayjs().subtract(1, 'month').endOf('month'))
+        case ActionType.SUM_CURRENT_MONTH_PRICES:
+            // just sums and logs prices for the current month
+            const from = toDay(dayjs().startOf('month'))
+            const to = toDay(dayjs().endOf('month'))
             const sum = await sumPrices(context.db, from, to)
             log(`${sum} zł`)
             break
         case ActionType.SUMMARY_MONTHLY:
-            await buildSummary(context)
+            await generateMonthlySummary(context)
             break
         case ActionType.SUMMARY_MONTHLY_MIGRATION:
             const monthsAgo = 2
-            await buildSummary(context, monthsAgo)
+            await generateMonthlySummary(context, monthsAgo)
+            break
+        case ActionType.MIGRATE_EXISTING_PEKA_DATA:
+            // migrates 12 months of data backwards
+            const monthsBackwards = 12
+            await requestTransits(context, {
+                START_DAY: toDay(
+                    dayjs()
+                        .subtract(monthsBackwards, 'months')
+                        .startOf('month'),
+                ),
+                END_DAY: toDay(dayjs()),
+            })
+            const summaryJobs = [...Array(monthsBackwards - 1)].map((_, i) =>
+                generateMonthlySummary(context, i + 1),
+            )
+            await Promise.all(summaryJobs)
+            log(
+                `Successfully migrated ${monthsBackwards} months of available data`,
+            )
             break
         default:
             logError(`Unknown action: action=${config.action}.`)

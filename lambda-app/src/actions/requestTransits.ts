@@ -93,7 +93,7 @@ export const requestTransits = async (
                 cachedJourneys.push(toDbPekaJourney(transit))
             }
         }
-        // total pages is eg. 5, but pageNumber starts from 0
+        // pageNumber is actually the index of the page, so we need to add 1 to it
         if (
             pageNumber === totalPages - 1 &&
             dayjs(START_DAY).isBefore(
@@ -107,9 +107,8 @@ export const requestTransits = async (
 
     if (earliestDate) {
         logWarn(
-            'PREMATURELY REACHED END OF AVAILABLE DATA. NOT ALL DATA MAY BE AVAILABLE FOR GIVEN RANGE',
+            `PREMATURELY REACHED END OF AVAILABLE DATA. NOT ALL DATA MAY BE AVAILABLE FOR GIVEN RANGE. Earliest ride date: ${earliestDate}`,
         )
-        log(`Earliest ride date: ${earliestDate}`)
     }
     log(
         `Day range (both sides included): ${
