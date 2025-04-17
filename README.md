@@ -9,9 +9,9 @@ A key feature of its configuration is that it is free — it does not use AWS Se
 ## Table of contents
   * [Features](#features)
   * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-  * [Local usage](#local-usage)
-  * [Serverless usage](#serverless-usage)
+  * [Installation and usage](#installation-and-usage)
+    + [Local](#local)
+    + [Serverless](#serverless)
   * [Database](#database)
     + [Collections](#collections)
   * [Lambda Actions](#lambda-actions)
@@ -39,7 +39,9 @@ A key feature of its configuration is that it is free — it does not use AWS Se
 
 * For serverless just AWS account is needed.
 
-## Installation
+## Installation and usage
+
+### Local
 
 1. Clone the repository:
 
@@ -57,16 +59,18 @@ EMAIL=your_email_in_peka_system
 PASSWORD=your_password_to_account
 ```
 
-## Local usage
-
 Before using script locally, change the action at `start-local.ts` to desired value. You may also need to adjust some action parameters in `lambda-app.ts`. Then, (and only then to avoid unwanted effects) run:
 
 ```bash
 cd lambda-app && yarn build && yarn start
 ```
 
-## Serverless usage
-Fork the repo. Add secrets to Github Actions Secrets, namely: `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_NAME`, `EMAIL`, `MONGO_URI`, `PASSWORD`. Also add Github Actions Variables: `AWS_PROJECT_TAG`, `AWS_REGION`, `AWS_STACK_NAME`. You can now deploy the app on your AWS.  
+### Serverless
+
+1. Fork the repo. 
+2. Add secrets to Github Actions Secrets, namely: `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY`, `DATABASE_NAME`, `EMAIL`, `MONGO_URI`, `PASSWORD`. 
+3. Add Github Actions Variables: `AWS_PROJECT_TAG`, `AWS_REGION`, `AWS_STACK_NAME`. 
+4. You can now deploy the app on your AWS.  
 
 This might also be a good time to migrate existing PEKA data into database, running `MIGRATE_EXISTING_PEKA_DATA` action, either serverless or locally.
 
