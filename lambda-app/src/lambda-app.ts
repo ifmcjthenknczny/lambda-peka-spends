@@ -69,6 +69,7 @@ export async function lambda(config: AppConfig) {
                 ),
                 END_DAY: toDay(dayjs()),
             })
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const summaryJobs = [...Array(monthsBackwards - 1)].map((_, i) =>
                 generateMonthlySummary(context, i + 1),
             )

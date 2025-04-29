@@ -60,7 +60,7 @@ export interface TransitContent {
     journey?: Journey
 }
 
-interface TransitData {
+export interface TransitData {
     content: TransitContent[]
     pageable: Pageable
     last: boolean
