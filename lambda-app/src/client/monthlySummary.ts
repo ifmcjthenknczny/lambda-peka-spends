@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 import { Day } from '../helpers/util/date'
-import { journeyCollection } from './pekaJourneys'
 
 const collectionName = 'MonthlySummaries'
 
-type DbMonthlySummary = {
+export type DbMonthlySummary = {
     _id: string
     from: Day
     to: Day
@@ -28,38 +27,4 @@ export const insertMonthlySummary = async (
             `Failed to insert PEKA Monthly Summary. ${error.message}`,
         )
     }
-}
-
-export const sumPrices = async (
-    db: mongoose.mongo.Db,
-    start: Day,
-    end: Day,
-) => {
-    const collection = journeyCollection(db)
-    const result = await collection
-        .aggregate<{ totalSpent: number }>([
-            {
-                $match: {
-                    transactionDate: {
-                        $gte: start,
-                        $lte: end,
-                    },
-                },
-            },
-            {
-                $group: {
-                    _id: null,
-                    totalPrice: { $sum: '$price' },
-                },
-            },
-            {
-                $project: {
-                    _id: 0,
-                    totalSpent: { $round: ['$totalPrice', 2] },
-                },
-            },
-        ])
-        .toArray()
-
-    return result?.[0]?.totalSpent || 0
 }

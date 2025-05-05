@@ -121,6 +121,22 @@ class Site extends Stack {
                 roleArn: schedulerRole.roleArn,
             },
         })
+
+        new scheduler.CfnSchedule(this, 'ONGOING_MONTH_SUMMARY', {
+            flexibleTimeWindow: {
+                mode: 'OFF',
+            },
+            scheduleExpressionTimezone: 'Europe/Warsaw',
+            scheduleExpression: events.Schedule.cron({
+                minute: '30',
+                hour: '5',
+            }).expressionString,
+            target: {
+                arn: lambdaApp.functionArn,
+                input: JSON.stringify({ action: 'ONGOING_MONTH_SUMMARY' }),
+                roleArn: schedulerRole.roleArn,
+            },
+        })
     }
 }
 

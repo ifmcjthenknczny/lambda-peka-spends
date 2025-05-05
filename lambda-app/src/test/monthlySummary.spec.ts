@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call */
 
 import mongoose from 'mongoose'
-import { insertMonthlySummary, sumPrices } from '../client/monthlySummary'
+import { insertMonthlySummary } from '../client/monthlySummary'
 import { Day } from '../helpers/util/date'
 import * as pekaJourneys from '../client/pekaJourneys'
+import { sumPrices } from '../client/pekaJourneys'
 
 jest.mock('../client/pekaJourneys')
 

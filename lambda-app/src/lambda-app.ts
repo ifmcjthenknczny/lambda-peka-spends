@@ -5,6 +5,7 @@ import { requestTransits } from './actions/requestTransits'
 import { toDay } from './helpers/util/date'
 import { sumPrices } from './client/pekaJourneys'
 import { generateMonthlySummary } from './actions/generateMonthlySummary'
+import { refreshOngoingMonthSummary } from './actions/refreshOngoingMonthSummary'
 
 export enum ActionType {
     PING = 'PING',
@@ -14,6 +15,7 @@ export enum ActionType {
     SUM_CURRENT_MONTH_PRICES = 'SUM_CURRENT_MONTH_PRICES',
     SUMMARY_MONTHLY_MIGRATION = 'SUMMARY_MONTHLY_MIGRATION',
     MIGRATE_EXISTING_PEKA_DATA = 'MIGRATE_EXISTING_PEKA_DATA',
+    ONGOING_MONTH_SUMMARY = 'ONGOING_MONTH_SUMMARY',
     MIGRATION = 'MIGRATION',
 }
 
@@ -51,6 +53,9 @@ export async function lambda(config: AppConfig) {
             const sum = await sumPrices(context.db, from, to)
             log(`${sum} zł`)
             break
+        case ActionType.ONGOING_MONTH_SUMMARY:
+            await refreshOngoingMonthSummary(context)
+            break;
         case ActionType.SUMMARY_MONTHLY:
             await generateMonthlySummary(context)
             break

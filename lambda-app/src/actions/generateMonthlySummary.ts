@@ -8,7 +8,7 @@ import { log } from '../helpers/util/log'
 
 dayjs.locale('pl')
 
-const buildMonthString = (monthsAgo: number) =>
+export const buildMonthString = (monthsAgo: number) =>
     dayjs().subtract(monthsAgo, 'month').format('MMMM YYYY')
 
 export const generateMonthlySummary = async (
