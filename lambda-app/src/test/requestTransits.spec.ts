@@ -86,26 +86,26 @@ describe('requestTransits Action', () => {
         const mockApiResponsePage0: TransitData = {
             content: [
                 {
-                    transactionId: '1',
-                    transactionDate: '2023-10-15T10:00:00',
-                    transactionType: 'Przejazd',
-                    transactionStatus: 'Potwierdzona',
-                    price: 1.0,
-                    ordinal: 1,
-                    transactionPlace: 'Kasownik',
-                },
-                {
-                    transactionId: '2',
-                    transactionDate: '2023-09-30T10:00:00',
-                    transactionType: 'Przejazd',
-                    transactionStatus: 'Potwierdzona',
-                    price: 1.0,
-                    ordinal: 1,
-                    transactionPlace: 'Kasownik',
-                },
-                {
                     transactionId: '5',
                     transactionDate: '2023-11-01T10:00:00',
+                    transactionType: 'Przejazd',
+                    transactionStatus: 'Potwierdzona',
+                    price: 1.0,
+                    ordinal: 1,
+                    transactionPlace: 'Kasownik',
+                },
+                {
+                    transactionId: '6',
+                    transactionDate: '2023-10-20T14:00:00',
+                    transactionType: 'Przejazd',
+                    transactionStatus: 'Anulowana',
+                    price: 1.0,
+                    ordinal: 1,
+                    transactionPlace: 'Kasownik',
+                },
+                {
+                    transactionId: '1',
+                    transactionDate: '2023-10-15T10:00:00',
                     transactionType: 'Przejazd',
                     transactionStatus: 'Potwierdzona',
                     price: 1.0,
@@ -126,15 +126,7 @@ describe('requestTransits Action', () => {
         }
         const mockApiResponsePage1: TransitData = {
             content: [
-                {
-                    transactionId: '3',
-                    transactionDate: '2023-10-05T12:00:00',
-                    transactionType: 'Przejazd',
-                    transactionStatus: 'Potwierdzona',
-                    price: 1.5,
-                    ordinal: 1,
-                    transactionPlace: 'Kasownik',
-                },
+
                 {
                     transactionId: '4',
                     transactionDate: '2023-10-10T08:00:00',
@@ -145,10 +137,19 @@ describe('requestTransits Action', () => {
                     transactionPlace: 'Internet',
                 },
                 {
-                    transactionId: '6',
-                    transactionDate: '2023-10-20T14:00:00',
+                    transactionId: '3',
+                    transactionDate: '2023-10-05T12:00:00',
                     transactionType: 'Przejazd',
-                    transactionStatus: 'Anulowana',
+                    transactionStatus: 'Potwierdzona',
+                    price: 1.5,
+                    ordinal: 1,
+                    transactionPlace: 'Kasownik',
+                },
+                {
+                    transactionId: '2',
+                    transactionDate: '2023-09-30T10:00:00',
+                    transactionType: 'Przejazd',
+                    transactionStatus: 'Potwierdzona',
                     price: 1.0,
                     ordinal: 1,
                     transactionPlace: 'Kasownik',
@@ -388,7 +389,7 @@ describe('requestTransits Action', () => {
                     transactionPlace: 'Kasownik',
                 },
             ],
-            totalPages: 3,
+            totalPages: 2,
             number: 0,
             size: 100,
             numberOfElements: 3,
@@ -411,7 +412,7 @@ describe('requestTransits Action', () => {
                     transactionPlace: 'Kasownik',
                 },
             ],
-            totalPages: 3,
+            totalPages: 2,
             number: 1,
             size: 100,
             numberOfElements: 1,

@@ -32,7 +32,7 @@ async function makeRequest(pageNumber: number, bearerToken: string) {
             },
         },
     )
-    return response.data.data
+    return response?.data?.data
 }
 
 export type Params = {
@@ -72,7 +72,12 @@ export const requestTransits = async (
 
     const cachedJourneys: DbPekaJourney[] = []
 
+    let shouldBreakMainLoop = false
+
     for (let pageNumber = 0; pageNumber < totalPages; pageNumber++) {
+        if (shouldBreakMainLoop) {
+            break;
+        }
         const { content } =
             pageNumber === 0
                 ? firstPage
@@ -84,6 +89,7 @@ export const requestTransits = async (
                 continue
             }
             if (dayjs(toDay(transactionDate)).isBefore(dayjs(START_DAY))) {
+                shouldBreakMainLoop = true
                 break
             }
             if (
