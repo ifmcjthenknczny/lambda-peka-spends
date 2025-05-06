@@ -5,3 +5,7 @@ export function chunkify<T>(array: T[], chunkSize: number): T[][] {
     }
     return result
 }
+
+export function sum (numbers: number[]): number {
+    return numbers.reduce((acc, curr) => acc + curr, 0);
+}

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { DbMonthlySummary } from './monthlySummary'
 
-type DbOngoingMonthSummary = DbMonthlySummary
+type DbOngoingMonthSummary = DbMonthlySummary & {balance: number}
 
 const collectionName = 'OngoingMonthSummary'
 

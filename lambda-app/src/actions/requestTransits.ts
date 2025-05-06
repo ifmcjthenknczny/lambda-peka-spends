@@ -18,7 +18,7 @@ import {
 dayjs.extend(isSameOrAfter)
 dotenv.config()
 
-async function makeRequest(pageNumber: number, bearerToken: string) {
+async function makeTransitRequest(pageNumber: number, bearerToken: string) {
     const response = await axios.post<PekaResponse>(
         'https://www.peka.poznan.pl/sop/transaction/point/list?lang=pl',
         {
@@ -67,7 +67,7 @@ export const requestTransits = async (
     let hasFinishedEarly = false
     let earliestDate = ''
 
-    const firstPage = await makeRequest(0, bearerToken)
+    const firstPage = await makeTransitRequest(0, bearerToken)
     const totalPages = firstPage.totalPages
 
     const cachedJourneys: DbPekaJourney[] = []
@@ -81,7 +81,7 @@ export const requestTransits = async (
         const { content } =
             pageNumber === 0
                 ? firstPage
-                : await makeRequest(pageNumber, bearerToken)
+                : await makeTransitRequest(pageNumber, bearerToken)
         for (const transit of content) {
             const { transactionDate, transactionType, transactionStatus } =
                 transit
