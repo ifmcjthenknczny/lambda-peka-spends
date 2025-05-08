@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 import { insertMonthlySummary } from '../client/monthlySummary'
-import { Day } from '../helpers/util/date'
+import { Day } from '../helpers/date'
 import * as pekaJourneys from '../client/pekaJourneys'
 import { sumPrices } from '../client/pekaJourneys'
 

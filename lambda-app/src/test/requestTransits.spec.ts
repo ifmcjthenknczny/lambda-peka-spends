@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { requestTransits, Params } from '../actions/requestTransits'
+import { requestAndProcessTransits, Params } from '../actions/requestTransits'
 import { ScriptContext } from '../context'
-import * as loginHelper from '../helpers/login'
-import * as validationHelper from '../helpers/util/validate'
-import * as logHelper from '../helpers/util/log'
+import * as loginHelper from '../requests/login'
+import * as validationHelper from '../helpers/validate'
+import * as logHelper from '../helpers/logs'
 import * as dbClient from '../client/pekaJourneys'
 import axios from 'axios'
-import { PekaResponse, TransitData } from '../request'
-import { Day, toDay } from '../helpers/util/date'
+import { Day, toDay } from '../helpers/date'
 import { ZodError } from 'zod'
+import { PekaResponse, TransitData } from '../requests/transits'
 
 jest.mock('axios')
 jest.mock('../helpers/login')
@@ -126,7 +126,6 @@ describe('requestTransits Action', () => {
         }
         const mockApiResponsePage1: TransitData = {
             content: [
-
                 {
                     transactionId: '4',
                     transactionDate: '2023-10-10T08:00:00',
@@ -183,7 +182,7 @@ describe('requestTransits Action', () => {
                 } as PekaResponse,
             })
 
-        await requestTransits(mockContext, mockParams)
+        await requestAndProcessTransits(mockContext, mockParams)
 
         expect(mockedValidate).toHaveBeenCalledTimes(1)
 
@@ -245,7 +244,7 @@ describe('requestTransits Action', () => {
             errors: validationErrors,
         })
 
-        await requestTransits(mockContext, mockParams)
+        await requestAndProcessTransits(mockContext, mockParams)
 
         expect(mockedValidate).toHaveBeenCalledTimes(1)
         expect(mockedLogError).toHaveBeenCalledTimes(validationErrors.length)
@@ -264,7 +263,7 @@ describe('requestTransits Action', () => {
             message: 'Authentication failed',
         })
 
-        await requestTransits(mockContext, mockParams)
+        await requestAndProcessTransits(mockContext, mockParams)
 
         expect(mockedValidate).toHaveBeenCalledTimes(1)
         expect(mockedAuthenticate).toHaveBeenCalledTimes(1)
@@ -324,7 +323,7 @@ describe('requestTransits Action', () => {
             data: { data: mockApiResponsePage0, code: 0, message: 'Success' },
         })
 
-        await requestTransits(mockContext, mockParams)
+        await requestAndProcessTransits(mockContext, mockParams)
 
         expect(mockedAxios.post).toHaveBeenCalledTimes(1)
         expect(mockedInsertPekaJourneys).toHaveBeenCalledTimes(1)
@@ -440,7 +439,7 @@ describe('requestTransits Action', () => {
                 },
             })
 
-        await requestTransits(mockContext, mockParams)
+        await requestAndProcessTransits(mockContext, mockParams)
 
         expect(mockedAxios.post).toHaveBeenCalledTimes(1)
         expect(mockedAxios.post).toHaveBeenCalledWith(

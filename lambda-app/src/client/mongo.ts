@@ -1,4 +1,4 @@
-import { log } from '../helpers/util/log'
+import { log } from '../helpers/logs'
 import mongoose from 'mongoose'
 
 mongoose.set('strictQuery', true)

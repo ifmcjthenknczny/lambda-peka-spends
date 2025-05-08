@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod'
-import { emailSchema } from '../../schema'
+import { emailSchema } from '../schema'
 
 type ValidationError = {
     message: string

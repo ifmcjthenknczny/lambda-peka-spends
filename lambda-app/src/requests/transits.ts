@@ -1,19 +1,7 @@
-export const MUTUAL_HEADERS = {
-    'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0',
-    Accept: '*/*',
-    'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
-    'Accept-Encoding': 'gzip, deflate, br, zstd',
-    Priority: 'u=4',
-    Connection: 'keep-alive',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-origin',
-    DNT: '1',
-    'Sec-GPC': '1',
-}
+import { MUTUAL_HEADERS } from "./headers"
+import axios from 'axios'
 
-export const REQUEST_HEADERS = {
+export const TRANSIT_REQUEST_HEADERS = {
     ...MUTUAL_HEADERS,
     Referer: 'https://www.peka.poznan.pl/km/history',
     'content-type': 'application/json',
@@ -81,4 +69,21 @@ export interface TransitData {
 export interface PekaResponse {
     code: number
     data: TransitData
+}
+
+export async function getTransitsPage(pageNumber: number, bearerToken: string) {
+    const response = await axios.post<PekaResponse>(
+        'https://www.peka.poznan.pl/sop/transaction/point/list?lang=pl',
+        {
+            pageNumber,
+            pageSize: 100,
+        },
+        {
+            headers: {
+                ...TRANSIT_REQUEST_HEADERS,
+                authorization: `Bearer ${bearerToken}`,
+            },
+        },
+    )
+    return response?.data?.data
 }

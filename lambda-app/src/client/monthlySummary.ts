@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { Day } from '../helpers/util/date'
+import { Day } from '../helpers/date'
 
 const collectionName = 'MonthlySummaries'
 

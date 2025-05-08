@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { log } from './helpers/util/log'
+import { log } from './helpers/logs'
 import { mongo } from './client/mongo'
 import mongoose from 'mongoose'
 

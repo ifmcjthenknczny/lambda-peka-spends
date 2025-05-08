@@ -1,46 +1,28 @@
 import { ScriptContext } from '../context'
 import * as dotenv from 'dotenv'
-import axios from 'axios'
 import dayjs from 'dayjs'
-import { authenticate } from '../helpers/login'
+import { authenticate } from '../requests/login'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import { paramsSchema } from '../schema'
-import { log, logError, logWarn } from '../helpers/util/log'
-import { Day, toDay } from '../helpers/util/date'
-import { validate } from '../helpers/util/validate'
-import { PekaResponse, REQUEST_HEADERS } from '../request'
+import { log, logError, logWarn } from '../helpers/logs'
+import { Day, toDay } from '../helpers/date'
+import { validate } from '../helpers/validate'
 import {
     DbPekaJourney,
     insertPekaJourneys,
     toDbPekaJourney,
 } from '../client/pekaJourneys'
+import { getTransitsPage } from '../requests/transits'
 
 dayjs.extend(isSameOrAfter)
 dotenv.config()
-
-async function makeTransitRequest(pageNumber: number, bearerToken: string) {
-    const response = await axios.post<PekaResponse>(
-        'https://www.peka.poznan.pl/sop/transaction/point/list?lang=pl',
-        {
-            pageNumber,
-            pageSize: 100,
-        },
-        {
-            headers: {
-                ...REQUEST_HEADERS,
-                authorization: `Bearer ${bearerToken}`,
-            },
-        },
-    )
-    return response?.data?.data
-}
 
 export type Params = {
     START_DAY: Day
     END_DAY: Day
 }
 
-export const requestTransits = async (
+export const requestAndProcessTransits = async (
     context: ScriptContext,
     params: Params,
 ) => {
@@ -67,7 +49,7 @@ export const requestTransits = async (
     let hasFinishedEarly = false
     let earliestDate = ''
 
-    const firstPage = await makeTransitRequest(0, bearerToken)
+    const firstPage = await getTransitsPage(0, bearerToken)
     const totalPages = firstPage.totalPages
 
     const cachedJourneys: DbPekaJourney[] = []
@@ -76,12 +58,12 @@ export const requestTransits = async (
 
     for (let pageNumber = 0; pageNumber < totalPages; pageNumber++) {
         if (shouldBreakMainLoop) {
-            break;
+            break
         }
         const { content } =
             pageNumber === 0
                 ? firstPage
-                : await makeTransitRequest(pageNumber, bearerToken)
+                : await getTransitsPage(pageNumber, bearerToken)
         for (const transit of content) {
             const { transactionDate, transactionType, transactionStatus } =
                 transit

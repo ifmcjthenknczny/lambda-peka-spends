@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/pl'
 import { ScriptContext } from '../context'
-import { toDay } from '../helpers/util/date'
+import { toDay } from '../helpers/date'
 import { sumPrices } from '../client/pekaJourneys'
 import { insertMonthlySummary } from '../client/monthlySummary'
-import { log } from '../helpers/util/log'
+import { log } from '../helpers/logs'
 
 dayjs.locale('pl')
 

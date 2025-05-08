@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { TransitContent } from '../request'
-import { Day, toDay } from '../helpers/util/date'
+import { Day, toDay } from '../helpers/date'
+import { TransitContent } from '../requests/transits'
 
 const collectionName = 'PekaJourneys'
 
