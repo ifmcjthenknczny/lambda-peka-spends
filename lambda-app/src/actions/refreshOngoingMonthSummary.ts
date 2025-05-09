@@ -15,7 +15,7 @@ import { getCurrentAccountBalance } from '../requests/balance'
 dayjs.locale('pl')
 
 export const refreshOngoingMonthSummary = async (context: ScriptContext) => {
-    const bearerToken = (await authenticate()).data
+    const bearerToken = await authenticate()
     const balance = await getCurrentAccountBalance(bearerToken)
 
     await clearOngoingMonthSummaries(context.db)

@@ -37,14 +37,7 @@ export const requestAndProcessTransits = async (
         return
     }
 
-    const { data: bearerToken, code } = await authenticate()
-
-    if (code !== 0) {
-        logError(
-            'Problem with authentication. Try to login manually with solving captcha on the page https://www.peka.poznan.pl/km/login and rerun the script.',
-        )
-        return
-    }
+    const bearerToken = await authenticate()
 
     let hasFinishedEarly = false
     let earliestDate = ''
