@@ -72,6 +72,7 @@ export interface PekaResponse {
 }
 
 export async function getTransitsPage(pageNumber: number, bearerToken: string) {
+    try {
     const response = await axios.post<PekaResponse>(
         'https://www.peka.poznan.pl/sop/transaction/point/list?lang=pl',
         {
@@ -86,4 +87,8 @@ export async function getTransitsPage(pageNumber: number, bearerToken: string) {
         },
     )
     return response?.data?.data
+}
+     catch (error: any) {
+        throw new Error(`Error during fetching transits. ${error.message}`)
+    }
 }

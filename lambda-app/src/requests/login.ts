@@ -14,6 +14,7 @@ export const LOGIN_REQUEST_HEADERS = {
 }
 
 export const authenticate = async () => {
+    try {
     const response = await axios.post<AuthenticationResponse>(
         'https://www.peka.poznan.pl/sop/authenticate?lang=pl',
         {
@@ -23,4 +24,7 @@ export const authenticate = async () => {
         { headers: { ...LOGIN_REQUEST_HEADERS, Priority: 'u=0' } },
     )
     return response.data
+} catch (error: any) {
+    throw new Error(`Error during authentication. ${error.message}`)
+}
 }

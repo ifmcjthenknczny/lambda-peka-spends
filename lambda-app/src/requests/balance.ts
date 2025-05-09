@@ -32,6 +32,7 @@ const BALANCE_REQUEST_HEADERS = {
 }
 
 export const getCurrentAccountBalance = async (bearerToken: string) => {
+    try {
     const response = await axios.get<CardResponse>(
         'https://www.peka.poznan.pl/sop/account/cards?lang=pl',
         {
@@ -47,4 +48,8 @@ export const getCurrentAccountBalance = async (bearerToken: string) => {
             card.status === 'ACTIVE_CARD' ? card.tpurse.balance : 0,
         ),
     )
+}
+     catch (error: any) {
+        throw new Error(`Error during fetching account balance. ${error.message}`)
+    }
 }
