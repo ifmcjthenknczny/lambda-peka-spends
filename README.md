@@ -81,21 +81,19 @@ Database type for this project is NOSQL MongoDB. I recommend downloading MongoDB
 ### Collections
 * **MonthlySummaries** - stores montly summarized costs of your journeys.
 * **PekaJourneys** - stores informations about all your journeys and their costs.
+* **OngoingMonthSummary** - stores information about current month travel costs so far and current account balance (as on morning of each day).
 
 ## Lambda Actions
 * **PING** - Simple ping to test if the function is alive. Logs ```PONG```.
 * **PEKA_EVERYDAY** - Scrapes and saves public transport journeys from two days ago (based on PEKA card usage). Scheduled to run daily.
 * **SUMMARY_MONTHLY** - Generates and stores a summary of public transport costs for the previous month. Runs automatically on the 3rd day of each month.
-* **SUM_CURRENT_MONTH_PRICES** - Calculates and logs the total cost of journeys in the ongoing month. For manual use or debugging.
-* **SUMMARY_MONTHLY_MIGRATION** - Same as SUMMARY_MONTHLY, but allows specifying for which month back the summary should be generated. Useful for backfilling older data.
-* **MIGRATION** - Imports public transport journey data for a specified date range (hardcoded). Used for one-off data recovery or batch imports.
+* **ONGOING_MONTH_SUMMARY** - Daily calculates and logs the total cost of journeys in the ongoing month, as well as fetches current account balance.
 * **MIGRATE_EXISTING_PEKA_DATA** - Full migration mode — imports 12 months of available historical PEKA data and generates monthly summaries for each month in parallel.
 
 ## Roadmap
-
-- Add captcha solver
-- Add possibility for multiple users
-- Sending monthly summarizing email 
+- Add captcha solver  
+- Add possibility for multiple users to use the app  
+- Sending monthly summarizing email  
 
 ## License
 
