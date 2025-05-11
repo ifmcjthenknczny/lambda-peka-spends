@@ -1,6 +1,6 @@
 # PEKA Transit Expense Tracker
 
-> Do you want to know how much do you spend on public transit in Poznań?
+> Want a better way to keep track of your spending on public transport in Poznań?
 
 A Node.js script that scrapes Poznan public transport journeys paid by PEKA card.  
 The project is AWS Lambda ready, it utilizes schedulers to save journeys from two days ago everyday and to summarize monthly costs of public transport on 3rd day of every month.  
